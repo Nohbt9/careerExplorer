@@ -3,8 +3,8 @@ const mongoose=require("mongoose");
 const data=require("./data");
 const bcrypt=require("bcrypt");
 const crypto=require("crypto-js");
-const key="2wAKhWNBi0";
-console.log(key);
+
+
 const jwt=require("jsonwebtoken");
 const {Schema}=mongoose;
 mongoose.connect(`mongodb+srv://adminx:${process.env.PASS}@cluster0.fvvdife.mongodb.net/career`).then(()=>{console.log("connected")}).catch((e)=>{
@@ -93,8 +93,8 @@ if(exists===false){
    console.log(e.message);
     }
 try{
-   const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},key);
-    const etoken = crypto.AES.encrypt(token,key).toString();
+   const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},process.env.KEY);
+    const etoken = crypto.AES.encrypt(token,process.env.KEY).toString();
    //  console.log(token);
     await User.create({username:username,emailID:userid,password:password,token: etoken});
    // not returning redirecting to home page

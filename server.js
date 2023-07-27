@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
-const key="2wAKhWNBi0";
+
 
 app.post("/getFullCareer",async (req,res)=>{
     console.log(req.body.id);
@@ -40,7 +40,7 @@ app.post("/createToken",async (req,res)=>{
      }
     //  if(message.code==0){
     //   res.cookie(encrypt("username"),,{httpOnly:true});
-    //   res.cookie(encrypt("token"),encrypt(jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},key)),{httpOnly:true});
+    //   res.cookie(encrypt("token"),encrypt(jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},process.env.KEY)),{httpOnly:true});
     //  } 
     res.send(message);
 });
@@ -48,10 +48,10 @@ app.get("/",(req,res)=>{
   res.send("heykdk");
 });
 function encrypt(data){
-return crypto.AES.encrypt(data,key).toString() ;
+return crypto.AES.encrypt(data,process.env.KEY).toString() ;
 }
 function dcrypt(data){
-return crypto.AES.decrypt(data,key).toString(crypto.enc.Utf8);
+return crypto.AES.decrypt(data,process.env.KEY).toString(crypto.enc.Utf8);
 }
 //for sign in createToken&a
 app.post("/createToken&a",async (req,res)=>{
@@ -63,11 +63,11 @@ app.post("/createToken&a",async (req,res)=>{
      if(result.code){
           const user= await User.findOne({username:req.body.username});
           
-            jwt.verify(dcrypt(user.token),key,async (err)=>{
+            jwt.verify(dcrypt(user.token),process.env.KEY,async (err)=>{
               if(err){
                
-                const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},key);
-                const etoken=crypto.AES.encrypt(token,key).toString();
+                const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},process.env.KEY);
+                const etoken=crypto.AES.encrypt(token,process.env.KEY).toString();
                 try{
                   await  User.updateOne({username:req.body.username},{token:etoken});
                   await NewsList.updateOne({token:user.token},{token:etoken});
@@ -88,8 +88,8 @@ app.post("/createToken&a",async (req,res)=>{
 
      ////** */
 //      if(result.code){
-//        const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},key);
-//        const etoken=crypto.AES.encrypt(token,key).toString();
+//        const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},process.env.KEY);
+//        const etoken=crypto.AES.encrypt(token,process.env.KEY).toString();
 //        try{
 //          await  User.updateOne({username:req.body.username},{token:etoken});
 //        }catch(e){
@@ -99,11 +99,11 @@ app.post("/createToken&a",async (req,res)=>{
 //      }
 //  }else{
 //   console.log("second case");
-//   jwt.verify(dcrypt(req.body.token),key, async (err)=>{
+//   jwt.verify(dcrypt(req.body.token),process.env.KEY, async (err)=>{
 //     if(err){
 //       console.log("expired");
-//       const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},key);
-//       const etoken=crypto.AES.encrypt(token,key).toString();
+//       const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},process.env.KEY);
+//       const etoken=crypto.AES.encrypt(token,process.env.KEY).toString();
 //       try{
 //         await  User.updateOne({username:req.body.username},{token:etoken});
 //         await  NewsList.updateOne({token:req.body.token},{token:etoken});
@@ -123,10 +123,10 @@ app.post("/createToken&a",async (req,res)=>{
 //     if(obj.token==req.body.token){
 //       res.send({code:2,message:"Already signed in "});
 //      }else{
-//       jwt.verify(dcrypt(obj.token),key, async (err)=>{
+//       jwt.verify(dcrypt(obj.token),process.env.KEY, async (err)=>{
 //         if(err){
-//           const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},key);
-//           const etoken=crypto.AES.encrypt(token,key).toString();
+//           const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},process.env.KEY);
+//           const etoken=crypto.AES.encrypt(token,process.env.KEY).toString();
 //           try{
 //             await  User.updateOne({username:req.body.username},{token:etoken});
 //             await  NewsList.updateOne({token:req.body.token},{token:etoken});
@@ -150,11 +150,11 @@ app.post("/createToken&a",async (req,res)=>{
       if(result.code){
         const user= await User.findOne({username:req.body.username});
           console.log(user);
-        jwt.verify(dcrypt(user.token),key,async (err)=>{
+        jwt.verify(dcrypt(user.token),process.env.KEY,async (err)=>{
           if(err){
            
-            const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},key);
-            const etoken=crypto.AES.encrypt(token,key).toString();
+            const token=jwt.sign({exp:Math.floor(Date.now()/1000)+3600*12*7},process.env.KEY);
+            const etoken=crypto.AES.encrypt(token,process.env.KEY).toString();
             try{
               await  User.updateOne({username:req.body.username},{token:etoken});
               await NewsList.updateOne({token:user.token},{token:etoken});
@@ -185,7 +185,7 @@ app.post("/createToken&a",async (req,res)=>{
 
 app.post("/tokenAuthentication",async (req,res)=>{
   console.log(req.body.token + "token");
-     jwt.verify(dcrypt(req.body.token),key, async (err)=>{
+     jwt.verify(dcrypt(req.body.token),process.env.KEY, async (err)=>{
       if(err){
             console.log("expired");
             res.send({code:1}); 
@@ -204,7 +204,7 @@ app.post("/tokenAuthentication",async (req,res)=>{
 
 
 function verify(subpro,token,res){// common function for verifying
-  jwt.verify(dcrypt(token),key, async (err)=>{
+  jwt.verify(dcrypt(token),process.env.KEY, async (err)=>{
     if(err){
           res.send({code:1}); 
     }else{
@@ -260,5 +260,5 @@ res.send(result);
 
 // var x=encrypt("tom").toString();
 // console.log(dcrypt(x));
-module.exports={key};
+
 app.listen(900);
