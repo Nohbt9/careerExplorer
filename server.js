@@ -1,16 +1,20 @@
 const express = require("express");
 const bodyParser=require("body-parser");
 const crypto=require("crypto-js");
+const path=require("path");
 const cookieParser=require("cookie-parser");
 const jwt=require("jsonwebtoken");
 const {createUser,authenticate,User,fetchNewsTopics,NewsList,Career}=require("./database");
 const cors=require("cors");
 const app=express();
+app.use(express.static(path.join(__dirname,"dist")));
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
-
+app.get("/",(req,res)=>{
+res.sendFile(path.join(__dirname,"dist","index.html"));
+});
 
 app.post("/getFullCareer",async (req,res)=>{
     console.log(req.body.id);
