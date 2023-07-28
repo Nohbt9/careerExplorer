@@ -7,7 +7,7 @@ const jwt=require("jsonwebtoken");
 const {createUser,authenticate,User,fetchNewsTopics,NewsList,Career}=require("./database");
 const cors=require("cors");
 const app=express();
-app.use(express.static(path.join(__dirname,"dist")));
+app.use(express.static(path.join(__dirname,"dist","assets")));
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
