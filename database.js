@@ -7,6 +7,7 @@ const crypto=require("crypto-js");
 
 const jwt=require("jsonwebtoken");
 const {Schema}=mongoose;
+
 mongoose.connect(`mongodb+srv://adminx:${process.env.PASS}@cluster0.fvvdife.mongodb.net/career`).then(()=>{console.log("connected")}).catch((e)=>{
     console.log("not connected");
     console.log("the error is" + e.message);
